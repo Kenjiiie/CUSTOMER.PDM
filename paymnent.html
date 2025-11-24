@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawonKOE.tikakue | payment-method</title>
+<link rel="stylesheet" href="leaflet.css">
+<body>
+<div class="container">
+  <h2>Proses Pembayaran</h2>
+  <p>Silakan lengkapi data berikut untuk menyelesaikan pembayaran Anda.</p>
+  <div class="section">
+    <h3>1. Data Pembeli</h3>
+    <div class="form-group">
+      <label>Nama Lengkap</label>
+      <input type="text" id="buyerName" placeholder="Nama penerima" required>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="buyerEmail" placeholder="Email aktif" required>
+    </div>
+    <div class="form-group">
+      <label>No Telepon</label>
+      <input type="tel" id="buyerPhone" placeholder="08123456789" required>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>2. Lokasi Pengiriman</h3>
+    <div id="map"></div>
+    <p id="addressOutput" style="margin-top:10px;font-size:14px;color:#555;">Geser peta untuk memilih lokasi Anda.</p>
+  </div>
+
+  <div class="section">
+    <h3>3. Metode Pembayaran</h3>
+    <div class="payment-methods">
+      <label><input type="radio" name="payment" value="Transfer BCA" checked> Transfer Bank (BCA)</label>
+      <do>BCA</do>
+       <while> 8161991376</while>
+      <label><input type="radio" name="payment" value="E-Wallet"> E-Wallet (GoPay / OVO / DANA)</label>
+      <label><input type="radio" name="payment" value="QRIS"> QRIS</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>4. Tracking Pengiriman</h3>
+    <div class="status">
+      <div class="status-step active-step"><i class="fas fa-box"></i><span>Dikemas</span></div>
+      <div class="status-step"><i class="fas fa-shipping-fast"></i><span>Dalam Pengiriman</span></div>
+      <div class="status-step"><i class="fas fa-home"></i><span>Diterima</span></div>
+        <div class="container">
+        <a href="index.html" class="btn-checkout">Kembali ke Menu Utama</a>
+        </div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="confirmPayment()">Bayar Sekarang</button>
+</div>
+<script src="https://kit.fontawesome.com/a2d9b6a76b.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+window.addEventListener("load", function() {
+  const map = L.map('map', {
+    center: [-7.983908, 112.621391],
+    zoom: 13
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  const marker = L.marker([-7.983908, 112.621391], { draggable: true }).addTo(map);
+
+  function fixMap() {
+    map.invalidateSize(true);
+    setTimeout(() => map.invalidateSize(true), 500);
+    setTimeout(() => map.invalidateSize(true), 1000);
+  }
+
+  fixMap();
+  window.addEventListener('resize', fixMap);
+  document.addEventListener('visibilitychange', fixMap);
+
+  marker.on('dragend', function(e) {
+    const { lat, lng } = e.target.getLatLng();
+    document.getElementById('addressOutput').textContent =
+      `Lokasi dipilih: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  });
+  window._map = map;
+});
+
+function confirmPayment(){
+  const name = document.getElementById('buyerName').value;
+  const payMethod = document.querySelector('input[name="payment"]:checked').value;
+  alert(`Terima kasih ${name}! Pembayaran dengan ${payMethod} sedang diproses.`);
+}
+</script>
+</body>
+</html>
